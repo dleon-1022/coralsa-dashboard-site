@@ -1,0 +1,26 @@
+{
+  "locations": [
+    {
+      "location": "Real Américas",
+      "location_slug": "real-americas",
+      "relative_url": "./real-americas/",
+      "average_score": 75.16,
+      "total_pizzas": 188,
+      "pass_count": 151,
+      "fail_count": 37,
+      "burbuja_count": 8,
+      "grasa_count": 29,
+      "bordes_count": 131,
+      "best_item": {
+        "score": 90,
+        "veredicto": "PASS",
+        "crop_image": "./real-americas/crops/CORALSA Zona 2 - Real Américas_img_0085_crop_01.jpg"
+      },
+      "worst_item": {
+        "score": 25,
+        "veredicto": "FAIL",
+        "crop_image": "./real-americas/crops/CORALSA Zona 2 - Real Américas_img_0021_crop_02.jpg"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "company": "CORALSA",
+  "district_slug": "zona-2",
+  "display_name": "Zona 2",
+  "total_locations": 1,
+  "total_pizzas": 188,
+  "average_score": 75.16,
+  "pass_count": 151,
+  "fail_count": 37,
+  "burbuja_count": 8,
+  "grasa_count": 29,
+  "bordes_count": 131
+}
