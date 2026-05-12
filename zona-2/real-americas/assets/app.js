@@ -43,8 +43,17 @@ function titleCase(text) {
     .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim()
-    .toLowerCase()
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+    .toLocaleLowerCase("es")
+    .split(" ")
+    .map(word => {
+      if (!word) return word;
+
+      return (
+        word.charAt(0).toLocaleUpperCase("es") +
+        word.slice(1)
+      );
+    })
+    .join(" ");
 }
 
 function parseCsvContext(csvName) {
@@ -80,6 +89,25 @@ function parseCsvContext(csvName) {
   match = raw.match(/^LCPZ[_\s-]*(.+)$/i);
   if (match) {
     client = "LCPZ";
+    location = titleCase(match[1]);
+    return { client, district: "", location, display: location };
+  }
+
+  // CORALSA Zona 2 - Real Américas
+  // CORALSA Zona 2 Real Américas
+  // Coralsa Zona 2 - Real Américas
+  match = raw.match(/^CORALSA\s+Zona\s+\d+\s*-?\s*(.+)$/i);
+  if (match) {
+    client = "CORALSA";
+    location = titleCase(match[1]);
+    return { client, district: "", location, display: location };
+  }
+
+  // CORALSA - Real Américas
+  // CORALSA_Real Américas
+  match = raw.match(/^CORALSA[_\s-]+(.+)$/i);
+  if (match) {
+    client = "CORALSA";
     location = titleCase(match[1]);
     return { client, district: "", location, display: location };
   }
