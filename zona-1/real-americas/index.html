@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pizza Quality Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="./assets/style.css" />
+  <style>
+    .top-strip {
+      height: 12px;
+      background: #234c43;
+      width: 100%;
+    }
+
+    .brand-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #d6dee8;
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 20px rgba(23, 50, 77, .06);
+    }
+
+    .brand-logo-lc {
+      width: 190px;
+      max-width: 38vw;
+      height: 54px;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+    }
+
+    .brand-logo-gritsee {
+      width: 122px;
+      height: 38px;
+      object-fit: contain;
+      display: block;
+    }
+
+    -select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .dataset-select-label {
+      font-size: 12px;
+      color: #607893;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    @media (max-width: 900px) {
+      .brand-bar {
+        align-items: flex-start;
+      }
+
+      .dataset-select-wrap {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      #datasetSelect {
+        width: 100%;
+      }
+
+      .brand-logo-lc {
+        width: 160px;
+        height: 48px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-strip"></div>
+
+  <div class="wrap">
+    <div class="brand-bar">
+      <div class="brand-left">
+
+        <!--Aqui va la imagen-->
+        <img class="brand-logo-lc"
+          src="https://d4lblcznaatk8.cloudfront.net/report-resources/little-caesars-logo-vector-text.png"
+          alt="Little Caesars" />
+
+
+        <!--Aqui los datos generales-->
+        <div class="brand-meta">
+          <div id="brandTitle">Quality Dashboard</div>
+          <div id="brandSubtitle">Resumen ejecutivo de calidad</div>
+          <div id="weekRange">Período: -</div>
+        </div>
+      </div>
+
+      <div class="dataset-select-wrap">
+        <div class="logo-box">
+          <img class="brand-logo-gritsee"
+            src="https://cdn.prod.website-files.com/630dfafcb284c6e437ab4f4a/630dfd5da3b28475ea041458_logo-color-top.svg"
+            alt="Gritsee" />
+        </div>
+        <span class="dataset-select-label">Locación / dataset</span>
+        <select id="datasetSelect"></select>
+      </div>
+    </div>
+
+    <div class="panel summary">
+      <section class="summary-info">
+        <p class="summary-subtitle">DETALLE DE AUDITORÍA</p>
+        <h2 class="summary-title">
+          Apariencia de producto final
+        </h2>
+        <p>
+          Descripción
+        </p>
+        <a class="summary-link" id="goBackButton">
+          <- Regresar al reporte principal </a>
+      </section>
+      <section class="summary-score">
+        <p class="summary-subtitle-green">
+          Puntuación
+        </p>
+        <p class="score" id="passRateKpi">0<span class="pct">%</span></p>
+      </section>
+      <section class="summary-doc">
+        <p class="summary-subtitle">
+          Información de auditoría
+        </p>
+        <p>
+          Estándar operativo, documentación y guía de auditoría.
+        </p>
+        <a class="summary-link">Ver documentación</a>
+      </section>
+    </div>
+
+    <section class="panel desempeño">
+      <section class="desempeño-upper">
+        <div>
+          <h2 class="summary-subtitle">
+            INDICADOR DE DESEMPEÑO
+          </h2>
+          <p class="title-2">
+            Score Obtenido vs Meta
+          </p>
+        </div>
+        <div class="bullet-value-stack">
+          <div class="desempeño-box-score">
+            <span class="summary-text3">Alcanzado</span>
+            <strong class="desempeño-score" id="bulletValueLabel">0</strong>
+          </div>
+          <div class="desempeño-box-pass">
+            <span class="summary-text3 ">Meta</span>
+            <strong class="desempeño-score" id="bulletTargetLabel">90</strong>
+          </div>
+        </div>
+      </section>
+      <section class="desempeño-lower">
+        <div id="bulletChart" class="bullet-chart">
+          <div class="bullet-scale">
+            <div class="bullet-range range-low"></div>
+            <div class="bullet-range range-mid"></div>
+            <div class="bullet-range range-high"></div>
+            <div class="bullet-target" id="bulletTarget"></div>
+            <div class="bullet-bar" id="bulletBar"></div>
+          </div>
+          <div class="bullet-axis">
+            <span>0</span>
+            <span>60</span>
+            <span>90</span>
+            <span>100</span>
+          </div>
+          <div class="bullet-meta">
+            <div class="bullet-legend">
+              <span class="legend-chip chip-low">0-60</span>
+              <span class="legend-chip chip-mid">61-89</span>
+              <span class="legend-chip chip-high">90+</span>
+            </div>
+            <div class="bullet-kpis">
+              <span class="bullet-kpi-status" id="bulletStatusLabel">En evolución</span>
+            </div>
+          </div>
+        </div>
+        <div class="desempeño-resumen">
+          <p class="title-2">
+            Resumen
+          </p>
+          <div class="filter-wrap">
+            <label for="pizzaTypeFilter"
+              style="font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em;">Filtrar
+              por tipo de pizza:</label>
+            <select id="pizzaTypeFilter" style="min-width: 200px;">
+              <option value="all">Todos los tipos</option>
+              <option value="peperonni">Peperonni</option>
+              <option value="queso">Queso</option>
+              <option value="especiales">Especiales</option>
+            </select>
+          </div>
+          <div class="desempeño-container">
+            <div class="card  desempeño-box">
+              <div class="label">Pizzas Analizadas</div>
+              <div class="value" id="totalPizzasKpi">0</div>
+            </div>
+            <div class="card desempeño-box box-green">
+              <div class="label-white">Aprobadas (PASS)</div>
+              <div class="value" id="passKpi">0</div>
+            </div>
+            <div class="card desempeño-box box-red">
+              <div class="label-white">Críticas (FAIL)</div>
+              <div class="value" id="failKpi">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+
+
+
+  <div class="panel">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+      <h2>Incidentes por pizza</h2>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label for="incidentFilter"
+          style="font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em;">Filtrar
+          pizzas por incidente:</label>
+        <select id="incidentFilter" style="min-width: 200px;">
+          <option value="all">Todos los incidentes</option>
+          <option value="burbuja">Burbuja</option>
+          <option value="grasa">Grasa</option>
+          <option value="bordes">Bordes sucios</option>
+          <option value="horneado">Horneado crítico</option>
+          <option value="distribucion">Distribución</option>
+        </select>
+      </div>
+    </div>
+    <div class="rings-grid rings-grid-four">
+      <div class="ring-card" id="card-burbuja">
+        <div class="incident-ring">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="48" class="ring-fill burbuja" id="ring-burbuja"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-value" id="burbujaPct">0%</div>
+            <div class="ring-label">Burbuja</div>
+            <div class="ring-sub" id="burbujaCount">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ring-card" id="card-grasa">
+        <div class="incident-ring">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="48" class="ring-fill grasa" id="ring-grasa"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-value" id="grasaPct">0%</div>
+            <div class="ring-label">Grasa</div>
+            <div class="ring-sub" id="grasaCount">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ring-card" id="card-bordes">
+        <div class="incident-ring">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="48" class="ring-fill bordes" id="ring-bordes"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-value" id="bordesPct">0%</div>
+            <div class="ring-label">Bordes sucios</div>
+            <div class="ring-sub" id="bordesCount">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ring-card" id="card-horneado">
+        <div class="incident-ring">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="48" class="ring-fill horneado" id="ring-horneado"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-value" id="horneadoPct">0%</div>
+            <div class="ring-label">Horneado crítico</div>
+            <div class="ring-sub" id="horneadoCount">0 / 0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ring-card" id="card-distribucion">
+        <div class="incident-ring">
+          <svg viewBox="0 0 120 120" class="ring-svg">
+            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+            <circle cx="60" cy="60" r="48" class="ring-fill distribucion" id="ring-distribucion"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-value" id="distribucionPct">0%</div>
+            <div class="ring-label">Distribución</div>
+            <div class="ring-sub" id="distribucionCount">0 / 0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid var(--line); margin: 24px 0;" id="incident-sep">
+    <div id="incident-gallery-header"
+      style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--text); margin: 0 0 4px 0;">Detalle de incidentes
+          detectados</h3>
+        <p style="font-size: 13px; color: var(--muted); margin: 0;">Pizzas con anomalías encontradas según los filtros
+          actuales</p>
+      </div>
+      <button id="toggleIncidentGalleryBtn" class="button-dropdown">Ocultar
+        imágenes</button>
+    </div>
+    <div class="incidentes-imgs" id="incidentPizzasGrid">
+
+    </div>
+    <div id="incidentPagination" style="margin-top: 16px; display: flex; gap: 8px; justify-content: center;"></div>
+  </div>
+
+
+  <div class="panel">
+    <h2>Franja de horas con más incidentes</h2>
+    <div class="chart-card">
+      <div class="chart-insight" id="worstHourInsight">Sin franja crítica detectada</div>
+      <div class="chart-wrap">
+        <canvas id="hourIncidentChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel">
+    <div class="section-head"
+      style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h2 style="margin: 0 0 4px 0;">Top 10 PASS</h2>
+        <p style="font-size: 13px; color: var(--muted); margin: 0;">Mejores resultados por score y veredicto aprobado
+        </p>
+      </div>
+      <button id="togglePassImagesBtn" class="button-dropdown">Ocultar
+        imágenes</button>
+    </div>
+    <div id="passGrid" class="ranking-grid ranking-grid-five"></div>
+  </div>
+
+  <div class="panel">
+    <div class="section-head"
+      style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <h2 style="margin: 0 0 4px 0;">Top 10 FAIL</h2>
+        <p style="font-size: 13px; color: var(--muted); margin: 0;">Casos críticos para seguimiento y mejora</p>
+      </div>
+      <button id="toggleFailImagesBtn" class=" button-dropdown">Ocultar
+        imágenes</button>
+    </div>
+    <div id="failGrid" class="ranking-grid ranking-grid-five"></div>
+  </div>
+
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="imageLightbox" class="lightbox-modal" style="display: none;">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-content" id="lightboxImage" alt="Pizza Incident Focus">
+  </div>
+
+  <script src="./assets/app.js"></script>
+</body>
+
+</html>

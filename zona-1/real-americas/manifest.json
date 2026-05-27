@@ -1,0 +1,9 @@
+{
+  "datasets": [
+    {
+      "csv_name": "CORALSA Zona 1 - Real Americas.csv",
+      "detailed_json": "./json/detailed.json",
+      "ranking_json": "./json/ranking.json"
+    }
+  ]
+}

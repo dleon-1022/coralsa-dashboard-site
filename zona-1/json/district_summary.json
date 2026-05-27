@@ -1,0 +1,19 @@
+{
+  "company": "CORALSA",
+  "district_slug": "zona-1",
+  "display_name": "Zona 1",
+  "total_locations": 1,
+  "total_pizzas": 27,
+  "average_score": 77.78,
+  "pass_count": 25,
+  "fail_count": 2,
+  "burbuja_count": 1,
+  "grasa_count": 8,
+  "bordes_count": 22,
+  "pizza_type_counts": {
+    "peperonni": 26,
+    "queso": 0,
+    "especiales": 1,
+    "desconocido": 0
+  }
+}
