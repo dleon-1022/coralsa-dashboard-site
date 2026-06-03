@@ -20,8 +20,8 @@ function pizzaTypeLabel(type) { const v = normalizePizzaType(type); return ({ pe
 
 function pizzaTypeBadge(type, confidence = null) {
   const v = normalizePizzaType(type); const pct = Number.isFinite(Number(confidence)) ? ` · ${(Number(confidence) * 100).toFixed(1)}%` : "";
-  const bg = { peperonni: "#f9eded", queso: "#fff6d8", especiales: "#f1eefb", desconocido: "#eef2f7" }[v] || "#eef2f7";
-  const color = { peperonni: "#b44848", queso: "#9c7325", especiales: "#6b4fb3", desconocido: "#516173" }[v] || "#516173";
+  const bg = { peperonni: "rgba(205, 48, 48, 0.14)", queso: "#fff6d8", especiales: "#f1eefb", desconocido: "#eef2f7" }[v] || "#eef2f7";
+  const color = { peperonni: "#cd3030", queso: "#9c7325", especiales: "#6b4fb3", desconocido: "#516173" }[v] || "#516173";
 
   return `<span class="pill" style="background:${bg};border-color:${bg};color:${color};">${pizzaTypeLabel(v)}</span>`;
 }
@@ -77,7 +77,7 @@ function renderWeekRangeFromDetailed(detailedData) {
 
   target.innerHTML = `Período: <strong>${startDate} - ${endDate}, ${year}</strong>`;
 }
-function buildIncidentTimeline(detailedData) { const dayCounts = new Map(), hourCounts = new Map(); for (const row of detailedData) { const incidentCount = (row.burbuja === "si" ? 1 : 0) + (row.grasa === "si" ? 1 : 0) + (row.bordes_sucios === "si" ? 1 : 0); if (!incidentCount) continue; const parsedDate = parseDateInfo(row); if (!parsedDate) continue; const dayKey = parsedDate.toISOString().slice(0, 10); const hourKey = `${dayKey}-${String(parsedDate.getHours()).padStart(2, "0")}`; dayCounts.set(dayKey, { label: formatDayLabel(parsedDate), total: (dayCounts.get(dayKey)?.total || 0) + incidentCount }); hourCounts.set(hourKey, { label: formatHourSlot(parsedDate), total: (hourCounts.get(hourKey)?.total || 0) + incidentCount }); } const sortedDays = [...dayCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([, v]) => v); const sortedHours = [...hourCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([, v]) => v); return { dayLabels: sortedDays.map(i => i.label), dayValues: sortedDays.map(i => i.total), dayHighlights: sortedDays, hourLabels: sortedHours.map(i => i.label), hourValues: sortedHours.map(i => i.total), hourHighlights: sortedHours }; }
+function buildIncidentTimeline(detailedData) { const dayCounts = new Map(), hourCounts = new Map(); for (const row of detailedData) { const incidentCount = (row.burbuja === "si" ? 1 : 0) + (row.bordes_sucios === "si" ? 1 : 0); if (!incidentCount) continue; const parsedDate = parseDateInfo(row); if (!parsedDate) continue; const dayKey = parsedDate.toISOString().slice(0, 10); const hourKey = `${dayKey}-${String(parsedDate.getHours()).padStart(2, "0")}`; dayCounts.set(dayKey, { label: formatDayLabel(parsedDate), total: (dayCounts.get(dayKey)?.total || 0) + incidentCount }); hourCounts.set(hourKey, { label: formatHourSlot(parsedDate), total: (hourCounts.get(hourKey)?.total || 0) + incidentCount }); } const sortedDays = [...dayCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([, v]) => v); const sortedHours = [...hourCounts.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([, v]) => v); return { dayLabels: sortedDays.map(i => i.label), dayValues: sortedDays.map(i => i.total), dayHighlights: sortedDays, hourLabels: sortedHours.map(i => i.label), hourValues: sortedHours.map(i => i.total), hourHighlights: sortedHours }; }
 function buildPizzaTypeCounts(detailedData) { const counts = { peperonni: 0, queso: 0, especiales: 0, desconocido: 0 }; for (const r of detailedData) { const t = normalizePizzaType(r.tipo_pizza); counts[t] = (counts[t] ?? counts.desconocido) + 1; if (!(t in counts)) counts.desconocido += 1; } return counts; }
 function buildMetrics(detailedData) {
   const total = detailedData.length;
@@ -88,7 +88,6 @@ function buildMetrics(detailedData) {
     pass,
     fail: total - pass,
     burbuja: detailedData.filter(x => x.burbuja === "si").length,
-    grasa: detailedData.filter(x => x.grasa === "si").length,
     bordes: detailedData.filter(x => x.bordes_sucios === "si").length,
     horneadoCritico: detailedData.filter(x => {
       const v = String(x.horneado || "").toLowerCase();
@@ -157,8 +156,8 @@ function renderSummary(rankingData, metrics) {
 
     if (scoreCardEl) {
       if (Number(rankingData.average_score ?? 0) >= 90) {
-        scoreCardEl.style.backgroundColor = "rgb(238 250 248)";
-        scoreCardEl.style.borderColor = "rgb(201 235 229)";
+        scoreCardEl.style.backgroundColor = "rgba(0, 160, 150, 0.08)";
+        scoreCardEl.style.borderColor = "rgba(0, 160, 150, 0.2)";
         if (scoreLabelEl) scoreLabelEl.style.color = "var(--good)";
         passRateKpiEl.style.color = "var(--good)";
       } else {
@@ -205,27 +204,36 @@ function renderBulletChart(rankingData) {
   }
 
   document.getElementById("bulletBar").style.background = avg < 60
-    ? "linear-gradient(90deg,#d76a6a,#b44848)"
+    ? "linear-gradient(90deg,#cd3030,#cd3030)"
     : avg < 90
       ? "linear-gradient(90deg,#e0c064,#b5842f)"
-      : "linear-gradient(90deg,#3c8d72,#1f7a5a)";
+      : "linear-gradient(90deg,#00c2b6,#00a096)";
 
   if (avg < 60) {
     label.textContent = "Bajo rendimiento";
-    label.style.color = "#b44848";
+    label.style.color = "#cd3030";
   } else if (avg < 90) {
     label.textContent = "En evolución";
     label.style.color = "#9c7325";
   } else {
     label.textContent = "Buen rendimiento";
-    label.style.color = "#1f7a5a";
+    label.style.color = "#00a096";
   }
 }
 function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
 function commonChartOptions() { return { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: "#17324d", boxWidth: 18, boxHeight: 10 } }, tooltip: { titleColor: "#17324d", bodyColor: "#17324d", backgroundColor: "rgba(255,255,255,0.96)", borderColor: "#d6dee8", borderWidth: 1 } } }; }
 function lightScales(xTicks = {}) { return { x: { ticks: { color: "#17324d", ...xTicks }, grid: { color: "#e4ebf2" } }, y: { beginAtZero: true, ticks: { color: "#17324d", precision: 0 }, grid: { color: "#e4ebf2" } } }; }
 function highlightSeries(values, base, hi) { if (!values.length) return []; const max = Math.max(...values); return values.map(v => v === max ? hi : base); }
-function renderCharts(metrics) {
+function rowHasIncident(row) {
+  const hasBurbuja = row.burbuja === "si";
+  const hasBordes = row.bordes_sucios === "si";
+  const vHorneado = String(row.horneado || "").toLowerCase();
+  const hasHorneado = vHorneado && vHorneado !== "correcto" && vHorneado !== "no_aplica";
+  const vDistribucion = String(row.distribucion || "").toLowerCase();
+  const hasDistribucion = vDistribucion && vDistribucion !== "correcto" && vDistribucion !== "no_aplica";
+  return hasBurbuja || hasBordes || hasHorneado || hasDistribucion;
+}
+function renderCharts(metrics, detailedData) {
   destroyCharts();
 
   const passFailCanvas = document.getElementById("passFailChart");
@@ -236,7 +244,7 @@ function renderCharts(metrics) {
         labels: ["PASS", "FAIL"],
         datasets: [{
           data: [metrics.pass, metrics.fail],
-          backgroundColor: ["#1f7a5a", "#d98a8a"],
+          backgroundColor: ["#00a096", "#cd3030"],
           borderWidth: 0
         }]
       },
@@ -254,7 +262,7 @@ function renderCharts(metrics) {
         labels: ["Peperonni", "Queso", "Especiales"],
         datasets: [{
           data: [pCounts.peperonni || 0, pCounts.queso || 0, pCounts.especiales || 0],
-          backgroundColor: ["#b44848", "#9c7325", "#6b4fb3"],
+          backgroundColor: ["#cd3030", "#9c7325", "#6b4fb3"],
           borderWidth: 0
         }]
       },
@@ -274,7 +282,7 @@ function renderCharts(metrics) {
         datasets: [{
           label: "Incidentes",
           data: metrics.dayIncidentValues,
-          backgroundColor: highlightSeries(metrics.dayIncidentValues, "#d9dde4", "#b44848"),
+          backgroundColor: highlightSeries(metrics.dayIncidentValues, "#d9dde4", "#cd3030"),
           borderRadius: 10
         }]
       },
@@ -298,6 +306,144 @@ function renderCharts(metrics) {
       options: { ...commonChartOptions(), scales: lightScales({ maxRotation: 45, minRotation: 45 }) }
     }));
   }
+
+  const distCanvas = document.getElementById("hourDayDistributionChart");
+  if (distCanvas && detailedData && detailedData.length > 0) {
+    const dayMap = new Map();
+    const uniqueDays = [];
+
+    const parsedRows = detailedData.map(row => {
+      const parsedDate = parseDateInfo(row);
+      if (!parsedDate) return null;
+      const dayKey = parsedDate.toISOString().slice(0, 10);
+      const dayLabel = formatDayLabel(parsedDate);
+      const hour = parsedDate.getHours();
+      return { dayKey, dayLabel, hour, row, parsedDate };
+    }).filter(Boolean);
+
+    parsedRows.sort((a, b) => a.parsedDate - b.parsedDate);
+
+    parsedRows.forEach(row => {
+      if (!dayMap.has(row.dayKey)) {
+        dayMap.set(row.dayKey, {
+          label: row.dayLabel,
+          index: uniqueDays.length
+        });
+        uniqueDays.push(row.dayLabel);
+      }
+    });
+
+    const groupMap = new Map();
+    parsedRows.forEach(row => {
+      const dayInfo = dayMap.get(row.dayKey);
+      const dayIndex = dayInfo.index;
+      const key = `${dayIndex}-${row.hour}`;
+
+      if (!groupMap.has(key)) {
+        groupMap.set(key, { samples: 0, incidents: 0, dayIndex, hour: row.hour });
+      }
+
+      const group = groupMap.get(key);
+      group.samples += 1;
+      if (rowHasIncident(row.row)) {
+        group.incidents += 1;
+      }
+    });
+
+    const samplesData = [];
+    const incidentsData = [];
+
+    groupMap.forEach(group => {
+      if (group.samples > 0) {
+        samplesData.push({
+          x: group.dayIndex,
+          y: group.hour,
+          r: Math.min(20, 4 + group.samples * 1.5),
+          count: group.samples
+        });
+      }
+      if (group.incidents > 0) {
+        incidentsData.push({
+          x: group.dayIndex,
+          y: group.hour,
+          r: Math.min(16, 3 + group.incidents * 1.5),
+          count: group.incidents
+        });
+      }
+    });
+
+    charts.push(new Chart(distCanvas, {
+      type: "bubble",
+      data: {
+        datasets: [
+          {
+            label: "Incidentes",
+            data: incidentsData,
+            backgroundColor: "rgba(205, 48, 48, 0.6)",
+            borderColor: "#cd3030",
+            borderWidth: 1.5
+          },
+          {
+            label: "Muestras",
+            data: samplesData,
+            backgroundColor: "rgba(0, 160, 150, 0.3)",
+            borderColor: "#00a096",
+            borderWidth: 1.5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: { color: "#17324d", boxWidth: 18, boxHeight: 10 }
+          },
+          tooltip: {
+            backgroundColor: "rgba(255,255,255,0.96)",
+            borderColor: "#d6dee8",
+            borderWidth: 1,
+            titleColor: "#17324d",
+            bodyColor: "#17324d",
+            callbacks: {
+              label: function (context) {
+                const raw = context.raw;
+                const dayLabel = uniqueDays[raw.x] || '';
+                const hourLabel = raw.y + ':00';
+                return `${context.dataset.label}: ${raw.count} pizzas (${dayLabel} a las ${hourLabel})`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: "linear",
+            min: -0.5,
+            max: Math.max(0, uniqueDays.length - 1) + 0.5,
+            ticks: {
+              stepSize: 1,
+              callback: function (value) {
+                return uniqueDays[value] || "";
+              },
+              color: "#17324d"
+            },
+            grid: { color: "#e4ebf2" }
+          },
+          y: {
+            type: "linear",
+            ticks: {
+              stepSize: 1,
+              callback: function (value) {
+                return value + ":00";
+              },
+              color: "#17324d"
+            },
+            grid: { color: "#e4ebf2" }
+          }
+        }
+      }
+    }));
+  }
 }
 function renderOperationalInsights(metrics) {
   const worstDay = (metrics.dayHighlights || []).reduce((m, i) => i.total > (m?.total || 0) ? i : m, null);
@@ -314,14 +460,12 @@ function renderOperationalInsights(metrics) {
 function setRing(circleId, value, total, pctId, countId) { const circle = document.getElementById(circleId), pctEl = document.getElementById(pctId), countEl = document.getElementById(countId); if (!circle || !pctEl || !countEl) return; const r = 48, c = 2 * Math.PI * r, pct = total > 0 ? (value / total) * 100 : 0; circle.style.strokeDasharray = `${c}`; circle.style.strokeDashoffset = `${c * (1 - pct / 100)}`; pctEl.textContent = `${pct.toFixed(1)}%`; countEl.textContent = `${value} / ${total}`; }
 function renderIncidentRings(metrics) {
   setRing("ring-burbuja", metrics.burbuja, metrics.total, "burbujaPct", "burbujaCount");
-  setRing("ring-grasa", metrics.grasa, metrics.total, "grasaPct", "grasaCount");
   setRing("ring-bordes", metrics.bordes, metrics.total, "bordesPct", "bordesCount");
   setRing("ring-horneado", metrics.horneadoCritico, metrics.total, "horneadoPct", "horneadoCount");
   setRing("ring-distribucion", metrics.distribucion, metrics.total, "distribucionPct", "distribucionCount");
 
   const rings = [
     { id: "card-burbuja", count: metrics.burbuja },
-    { id: "card-grasa", count: metrics.grasa },
     { id: "card-bordes", count: metrics.bordes },
     { id: "card-horneado", count: metrics.horneadoCritico },
     { id: "card-distribucion", count: metrics.distribucion }
@@ -370,7 +514,6 @@ function metricDetailsForItem(item) {
   const type = normalizePizzaType(item.tipo_pizza);
   const metrics = [
     { label: "Burbuja", val: displayValue(item.burbuja) },
-    { label: "Grasa", val: type === "peperonni" ? displayValue(item.grasa) : "N/A" },
     { label: "Bordes sucios", val: type === "peperonni" ? displayValue(item.bordes_sucios) : "N/A" },
     { label: "Horneado", val: type === "peperonni" ? displayValue(item.horneado) : "N/A" },
     { label: "Distribución", val: type === "peperonni" ? displayValue(item.distribucion) : "N/A" }
@@ -407,14 +550,15 @@ function renderRankingList(containerId, rankingData, detailedData, verdict) {
     .filter(i => i.veredicto === verdict)
     .sort((a, b) => verdict === "FAIL" ? a.score - b.score : b.score - a.score);
 
-  // Limitar a máx 2 especiales en el top 10
+  // Limitar a un máximo de 2 pizzas en total (de queso o especiales) en el top 10
   const top = [];
-  let especialesCount = 0;
+  let nonPepperoniCount = 0;
   for (const item of sorted) {
     if (top.length >= 10) break;
-    if (normalizePizzaType(item.tipo_pizza) === "especiales") {
-      if (especialesCount >= 2) continue;
-      especialesCount++;
+    const type = normalizePizzaType(item.tipo_pizza);
+    if (type === "especiales" || type === "queso") {
+      if (nonPepperoniCount >= 2) continue;
+      nonPepperoniCount++;
     }
     top.push(item);
   }
@@ -541,7 +685,7 @@ function renderDetailPage(page) {
     const originalCell = sourceUrl ? `<a class="table-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">Ver original</a>` : '<span class="small">Sin URL</span>';
     const cropCell = cropImage ? `<img src="${cropImage}" alt="crop" class="thumb">` : `<span class="small">Sin preview</span>`;
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${cropCell}</td><td>${row.fecha || "-"}</td><td>${row.locacion || "-"}</td><td>${pizzaTypeBadge(row.tipo_pizza, row.tipo_pizza_confidence)}</td><td><strong>${row.score ?? "-"}</strong></td><td>${verdictPill(row.veredicto || "-")}</td><td>${displayValue(row.burbuja)}</td><td>${displayValue(row.grasa)}</td><td>${displayValue(row.bordes_sucios)}</td><td>${displayValue(row.horneado)}</td><td>${displayValue(row.distribucion)}</td><td>${originalCell}</td>`;
+    tr.innerHTML = `<td>${cropCell}</td><td>${row.fecha || "-"}</td><td>${row.locacion || "-"}</td><td>${pizzaTypeBadge(row.tipo_pizza, row.tipo_pizza_confidence)}</td><td><strong>${row.score ?? "-"}</strong></td><td>${verdictPill(row.veredicto || "-")}</td><td>${displayValue(row.burbuja)}</td><td>${displayValue(row.bordes_sucios)}</td><td>${displayValue(row.horneado)}</td><td>${displayValue(row.distribucion)}</td><td>${originalCell}</td>`;
     tbody.appendChild(tr);
   }
 }
@@ -559,16 +703,14 @@ function renderIncidentGallery(detailedData, selectedIncident) {
 
   const matchesIncident = (row, type) => {
     const hasBurbuja = row.burbuja === "si";
-    const hasGrasa = row.grasa === "si";
     const hasBordes = row.bordes_sucios === "si";
     const vHorneado = String(row.horneado || "").toLowerCase();
     const hasHorneado = vHorneado && vHorneado !== "correcto" && vHorneado !== "no_aplica";
     const vDistribucion = String(row.distribucion || "").toLowerCase();
     const hasDistribucion = vDistribucion && vDistribucion !== "correcto" && vDistribucion !== "no_aplica";
 
-    if (type === "all") return hasBurbuja || hasGrasa || hasBordes || hasHorneado || hasDistribucion;
+    if (type === "all") return hasBurbuja || hasBordes || hasHorneado || hasDistribucion;
     if (type === "burbuja") return hasBurbuja;
-    if (type === "grasa") return hasGrasa;
     if (type === "bordes") return hasBordes;
     if (type === "horneado") return hasHorneado;
     if (type === "distribucion") return hasDistribucion;
@@ -623,9 +765,6 @@ function renderIncidentGallery(detailedData, selectedIncident) {
     const badges = [];
     if (item.burbuja === "si") {
       badges.push('<span class="pill" style="font-size:10px; padding:2px 6px; background:rgba(46,111,149,0.1); color:#2e6f95; border:1px solid rgba(46,111,149,0.2); font-weight:600;">Burbuja</span>');
-    }
-    if (item.grasa === "si") {
-      badges.push('<span class="pill" style="font-size:10px; padding:2px 6px; background:rgba(181,132,47,0.1); color:#b5842f; border:1px solid rgba(181,132,47,0.2); font-weight:600;">Grasa</span>');
     }
     if (item.bordes_sucios === "si") {
       badges.push('<span class="pill" style="font-size:10px; padding:2px 6px; background:rgba(95,111,138,0.1); color:#5f6f8a; border:1px solid rgba(95,111,138,0.2); font-weight:600;">Bordes</span>');
@@ -739,8 +878,6 @@ function renderAll() {
     let matchesIncident = true;
     if (selectedIncident === "burbuja") {
       matchesIncident = row.burbuja === "si";
-    } else if (selectedIncident === "grasa") {
-      matchesIncident = row.grasa === "si";
     } else if (selectedIncident === "bordes") {
       matchesIncident = row.bordes_sucios === "si";
     } else if (selectedIncident === "horneado") {
@@ -760,8 +897,6 @@ function renderAll() {
     if (detailItem) {
       if (selectedIncident === "burbuja") {
         matchesIncident = detailItem.burbuja === "si";
-      } else if (selectedIncident === "grasa") {
-        matchesIncident = detailItem.grasa === "si";
       } else if (selectedIncident === "bordes") {
         matchesIncident = detailItem.bordes_sucios === "si";
       } else if (selectedIncident === "horneado") {
@@ -798,7 +933,7 @@ function renderAll() {
   // Renderizamos el resumen KPI (aprobadas, críticas, total) usando listMetrics
   renderSummary(filteredRd, listMetrics);
   renderBulletChart(filteredRd);
-  renderCharts(listMetrics);
+  renderCharts(listMetrics, filteredDd);
   renderOperationalInsights(listMetrics);
 
   // Los anillos de incidentes muestran el estado general del tipo seleccionado
@@ -937,3 +1072,88 @@ let goBackButton = document.getElementById("goBackButton")
 goBackButton.addEventListener("click", () => {
   history.back();
 })
+// ── Tendencia histórica ──────────────────────────────────────────────────────
+let historyData = [];
+let historyChartInst = null;
+
+fetch('./history.json')
+  .then(r => r.ok ? r.json() : null)
+  .catch(() => null)
+  .then(data => {
+    if (!data || !Array.isArray(data) || data.length < 2) return;
+    historyData = data;
+    renderHistoryChart(getCurrentLocationName());
+  });
+
+function getCurrentLocationName() {
+  const sel = document.getElementById('datasetSelect');
+  if (!sel) return null;
+  const opt = sel.options[sel.selectedIndex];
+  return opt ? opt.text.trim() : null;
+}
+
+function renderHistoryChart(locationName) {
+  const panel = document.getElementById('historyPanel');
+  if (!historyData.length || !locationName) { if (panel) panel.style.display = 'none'; return; }
+
+  const points = [];
+  for (const entry of historyData) {
+    const loc = (entry.locations || []).find(l =>
+      l.location && locationName.toLowerCase().includes(l.location.toLowerCase())
+    );
+    if (loc) points.push({ week: entry.week, score: loc.average_score, pass: Math.round(loc.pass_rate * 100) });
+  }
+
+  if (points.length < 2) { panel.style.display = 'none'; return; }
+
+  panel.style.display = 'block';
+  document.getElementById('historyLocationLabel').textContent = locationName;
+
+  if (historyChartInst) { historyChartInst.destroy(); historyChartInst = null; }
+
+  historyChartInst = new Chart(document.getElementById('historyChart'), {
+    type: 'line',
+    data: {
+      labels: points.map(p => p.week),
+      datasets: [
+        {
+          label: 'Score promedio',
+          data: points.map(p => p.score),
+          borderColor: '#234c43',
+          backgroundColor: 'rgba(35,76,67,0.08)',
+          tension: 0.3,
+          pointRadius: 5,
+          fill: true,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Pass %',
+          data: points.map(p => p.pass),
+          borderColor: '#f3b21a',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          pointRadius: 5,
+          borderDash: [5, 4],
+          yAxisID: 'y',
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: true, position: 'top' } },
+      scales: {
+        y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+// Re-render cuando cambia el dataset seleccionado
+const _origDatasetChange = window.__datasetChangeCallback;
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'datasetSelect' && historyData.length) {
+    renderHistoryChart(getCurrentLocationName());
+  }
+});

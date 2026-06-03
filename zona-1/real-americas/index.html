@@ -13,7 +13,7 @@
   <style>
     .top-strip {
       height: 12px;
-      background: #234c43;
+      background: #00a096;
       width: 100%;
     }
 
@@ -253,14 +253,13 @@
         <select id="incidentFilter" style="min-width: 200px;">
           <option value="all">Todos los incidentes</option>
           <option value="burbuja">Burbuja</option>
-          <option value="grasa">Grasa</option>
           <option value="bordes">Bordes sucios</option>
           <option value="horneado">Horneado crítico</option>
           <option value="distribucion">Distribución</option>
         </select>
       </div>
     </div>
-    <div class="rings-grid rings-grid-four">
+    <div class="rings-grid">
       <div class="ring-card" id="card-burbuja">
         <div class="incident-ring">
           <svg viewBox="0 0 120 120" class="ring-svg">
@@ -271,20 +270,6 @@
             <div class="ring-value" id="burbujaPct">0%</div>
             <div class="ring-label">Burbuja</div>
             <div class="ring-sub" id="burbujaCount">0 / 0</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ring-card" id="card-grasa">
-        <div class="incident-ring">
-          <svg viewBox="0 0 120 120" class="ring-svg">
-            <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
-            <circle cx="60" cy="60" r="48" class="ring-fill grasa" id="ring-grasa"></circle>
-          </svg>
-          <div class="ring-center">
-            <div class="ring-value" id="grasaPct">0%</div>
-            <div class="ring-label">Grasa</div>
-            <div class="ring-sub" id="grasaCount">0 / 0</div>
           </div>
         </div>
       </div>
@@ -358,6 +343,13 @@
         <canvas id="hourIncidentChart"></canvas>
       </div>
     </div>
+    <div class="chart-card" style="margin-top: 20px;">
+      <h3>Distribución</h3>
+      <p>Distribución de incidentes y muestras por hora y día</p>
+      <div class="chart-wrap" style="height: 380px;">
+        <canvas id="hourDayDistributionChart"></canvas>
+      </div>
+    </div>
   </div>
 
 
@@ -388,6 +380,14 @@
     <div id="failGrid" class="ranking-grid ranking-grid-five"></div>
   </div>
 
+  </div>
+
+  <div class="panel" id="historyPanel" style="display:none">
+    <h2 style="margin:0 0 4px 0;">Tendencia semanal</h2>
+    <p style="font-size:13px;color:var(--muted);margin:0 0 16px 0;" id="historyLocationLabel"></p>
+    <div style="position:relative;width:100%;height:220px;">
+      <canvas id="historyChart" role="img" aria-label="Tendencia de score semanal por locación"></canvas>
+    </div>
   </div>
 
   <!-- Lightbox Modal -->
