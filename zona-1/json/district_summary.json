@@ -3,16 +3,16 @@
   "district_slug": "zona-1",
   "display_name": "Zona 1",
   "total_locations": 1,
-  "total_pizzas": 96,
-  "average_score": 82.97,
-  "pass_count": 96,
-  "fail_count": 0,
+  "total_pizzas": 84,
+  "average_score": 77.52,
+  "pass_count": 71,
+  "fail_count": 13,
   "burbuja_count": 0,
-  "bordes_count": 72,
+  "bordes_count": 62,
   "pizza_type_counts": {
-    "peperonni": 85,
+    "pepperoni": 75,
     "queso": 0,
-    "especiales": 11,
+    "especiales": 9,
     "desconocido": 0
   }
 }

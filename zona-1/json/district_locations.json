@@ -4,16 +4,16 @@
       "location": "Real Americas",
       "location_slug": "real-americas",
       "relative_url": "./real-americas/",
-      "average_score": 82.97,
-      "total_pizzas": 96,
-      "pass_count": 96,
-      "fail_count": 0,
+      "average_score": 77.52,
+      "total_pizzas": 84,
+      "pass_count": 71,
+      "fail_count": 13,
       "burbuja_count": 0,
-      "bordes_count": 72,
+      "bordes_count": 62,
       "pizza_type_counts": {
-        "peperonni": 85,
+        "pepperoni": 75,
         "queso": 0,
-        "especiales": 11,
+        "especiales": 9,
         "desconocido": 0
       },
       "best_item": {
@@ -24,11 +24,11 @@
         "crop_image": "./real-americas/crops/CORALSA Zona 1 - Real Americas_img_0046_crop_01.jpg"
       },
       "worst_item": {
-        "score": 75,
-        "veredicto": "PASS",
-        "tipo_pizza": "peperonni",
-        "tipo_pizza_confidence": 0.51,
-        "crop_image": "./real-americas/crops/CORALSA Zona 1 - Real Americas_img_0003_crop_01.jpg"
+        "score": 67,
+        "veredicto": "FAIL",
+        "tipo_pizza": "pepperoni",
+        "tipo_pizza_confidence": 0.9892,
+        "crop_image": "./real-americas/crops/CORALSA Zona 1 - Real Americas_img_0016_crop_02.jpg"
       }
     }
   ]
