@@ -151,11 +151,12 @@ function renderSummary(rankingData, metrics) {
   const scoreLabelEl = scoreCardEl ? scoreCardEl.querySelector(".summary-subtitle-green") : null;
 
   if (passRateKpiEl) {
-    const scoreVal = Number(rankingData.average_score ?? 0).toFixed(2);
+    const calculatedPassRate = metrics.total > 0 ? (metrics.pass / metrics.total) * 100 : 0;
+    const scoreVal = calculatedPassRate.toFixed(2);
     passRateKpiEl.innerHTML = `${scoreVal}`;
 
     if (scoreCardEl) {
-      if (Number(rankingData.average_score ?? 0) >= 90) {
+      if (calculatedPassRate >= 90) {
         scoreCardEl.style.backgroundColor = "rgba(0, 160, 150, 0.08)";
         scoreCardEl.style.borderColor = "rgba(0, 160, 150, 0.2)";
         if (scoreLabelEl) scoreLabelEl.style.color = "var(--good)";
@@ -180,7 +181,9 @@ function renderSummary(rankingData, metrics) {
 }
 
 function renderBulletChart(rankingData) {
-  const avg = Number(rankingData.average_score ?? 0);
+  const totalItems = rankingData.ranking ? rankingData.ranking.length : 0;
+  const passedItems = rankingData.ranking ? rankingData.ranking.filter(i => i.veredicto === "PASS").length : 0;
+  const avg = totalItems > 0 ? (passedItems / totalItems) * 100 : 0;
   const target = 90;
   const label = document.getElementById("bulletStatusLabel");
 

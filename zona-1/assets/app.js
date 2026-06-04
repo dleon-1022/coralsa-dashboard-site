@@ -127,11 +127,9 @@ function parseRowDate(row) {
 }
 
 function locationScore(row) {
-  const fromDetail = Number(row.scoreAverage ?? NaN);
-  if (Number.isFinite(fromDetail)) return fromDetail;
-  const raw = Number(row.average_score ?? NaN);
-  if (Number.isFinite(raw)) return raw;
-  return 0;
+  const total = Number(row.total_pizzas ?? row.categorySummary?.total ?? 0);
+  const pass = Number(row.pass_count ?? 0);
+  return total > 0 ? (pass / total) * 100 : 0;
 }
 
 function isYes(value) {
