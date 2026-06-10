@@ -5,12 +5,12 @@
   "total_locations": 1,
   "total_pizzas": 2,
   "average_score": 86.0,
-  "pass_count": 2,
+  "pass_count": 1,
   "fail_count": 0,
   "burbuja_count": 0,
-  "bordes_count": 1,
+  "bordes_count": 0,
   "pizza_type_counts": {
-    "pepperoni": 1,
+    "pepperoni": 0,
     "queso": 0,
     "especiales": 1,
     "desconocido": 0
