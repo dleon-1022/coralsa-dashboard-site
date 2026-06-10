@@ -1,10 +1,10 @@
 {
   "csv_name": "CORALSA Zona 1 - Real Americas.csv",
-  "total_source_images": 2,
-  "total_pizzas_detected": 2,
-  "average_score": 86.0,
+  "total_source_images": 1,
+  "total_pizzas_detected": 1,
+  "average_score": 100.0,
   "pizza_type_counts": {
-    "pepperoni": 1,
+    "pepperoni": 0,
     "queso": 0,
     "especiales": 1,
     "desconocido": 0
@@ -23,20 +23,6 @@
       "locacion": "Real Americas",
       "tipo_pizza": "especiales",
       "tipo_pizza_confidence": 0.8637
-    },
-    {
-      "rank": 2,
-      "crop_image": "crops/CORALSA Zona 1 - Real Americas_img_0000_crop_01.jpg",
-      "score": 72,
-      "veredicto": "PASS",
-      "burbuja": "no",
-      "bordes_sucios": "si",
-      "horneado": "bajo",
-      "distribucion": "aceptable",
-      "fecha": "2026-06-04",
-      "locacion": "Real Americas",
-      "tipo_pizza": "pepperoni",
-      "tipo_pizza_confidence": 0.9587
     }
   ]
 }
