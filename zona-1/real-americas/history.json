@@ -5,5 +5,44 @@
     "company": "coralsa",
     "summary": {},
     "locations": []
+  },
+  {
+    "date": "2026-06-09",
+    "week": "2026-W24",
+    "company": "coralsa",
+    "summary": {
+      "total_pizzas": 84,
+      "average_score": 77.52,
+      "pass_rate": 0.8452,
+      "score_pass_avg": 79.45,
+      "score_fail_avg": 67.0,
+      "burbuja_rate": 0.0,
+      "bordes_rate": 0.7381,
+      "horneado_critico_rate": 0.6667,
+      "distribucion_mala_rate": 0.8929,
+      "score_burbujas_avg": 37.5,
+      "score_horneado_avg": 24.03,
+      "score_distribucion_avg": 19.07,
+      "score_bordes_avg": 1.73
+    },
+    "locations": [
+      {
+        "location": "Real Americas",
+        "district": "1",
+        "total_pizzas": 84,
+        "average_score": 77.52,
+        "pass_rate": 0.8452,
+        "score_pass_avg": 79.45,
+        "score_fail_avg": 67.0,
+        "burbuja_rate": 0.0,
+        "bordes_rate": 0.7381,
+        "horneado_critico_rate": 0.6667,
+        "distribucion_mala_rate": 0.8929,
+        "score_burbujas_avg": 37.5,
+        "score_horneado_avg": 24.03,
+        "score_distribucion_avg": 19.07,
+        "score_bordes_avg": 1.73
+      }
+    ]
   }
 ]
