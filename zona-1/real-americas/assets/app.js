@@ -577,7 +577,8 @@ function renderRankingList(containerId, rankingData, detailedData, verdict) {
     const sourceUrl = safeUrl(detail?.source_url || item.source_url || "");
     const cropImage = safeImagePath(item.crop_image);
 
-    const img = cropImage ? `<img src="${cropImage}" alt="crop pizza" class="incident-gallery-img" style="cursor: pointer;">` : `<div class="small" style="padding:16px;">Sin preview</div>`;
+    const imgSrc = sourceUrl || cropImage;
+    const img = imgSrc ? `<img src="${imgSrc}" alt="crop pizza" class="incident-gallery-img" style="cursor: pointer;">` : `<div class="small" style="padding:16px;">Sin preview</div>`;
 
     const link = sourceUrl
       ? `<div class="small"><a href="${sourceUrl}" target="_blank" rel="noopener noreferrer">Ver imagen original</a></div>`
@@ -687,7 +688,8 @@ function renderDetailPage(page) {
     const sourceUrl = safeUrl(row.source_url);
     const cropImage = safeImagePath(row.crop_image);
     const originalCell = sourceUrl ? `<a class="table-link" href="${sourceUrl}" target="_blank" rel="noopener noreferrer">Ver original</a>` : '<span class="small">Sin URL</span>';
-    const cropCell = cropImage ? `<img src="${cropImage}" alt="crop" class="thumb">` : `<span class="small">Sin preview</span>`;
+    const cropSrc = sourceUrl || cropImage;
+    const cropCell = cropSrc ? `<img src="${cropSrc}" alt="crop" class="thumb">` : `<span class="small">Sin preview</span>`;
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${cropCell}</td><td>${row.fecha || "-"}</td><td>${row.locacion || "-"}</td><td>${pizzaTypeBadge(row.tipo_pizza, row.tipo_pizza_confidence)}</td><td><strong>${row.score ?? "-"}</strong></td><td>${verdictPill(row.veredicto || "-")}</td><td>${displayValue(row.burbuja)}</td><td>${displayValue(row.bordes_sucios)}</td><td>${displayValue(row.horneado)}</td><td>${displayValue(row.distribucion)}</td><td>${originalCell}</td>`;
     tbody.appendChild(tr);
@@ -762,8 +764,9 @@ function renderIncidentGallery(detailedData, selectedIncident) {
 
   itemsToShow.forEach(item => {
     const cropImage = safeImagePath(item.crop_image);
-    const imgHtml = cropImage
-      ? `<img src="${cropImage}" alt="crop pizza" class="incident-gallery-img" style="width:100%; height:140px; object-fit:cover; display:block; background:#000; cursor:pointer;">`
+    const itemSrc = safeUrl(item.source_url) || cropImage;
+    const imgHtml = itemSrc
+      ? `<img src="${itemSrc}" alt="crop pizza" class="incident-gallery-img" style="width:100%; height:140px; object-fit:cover; display:block; background:#000; cursor:pointer;">`
       : `<div class="small" style="padding:16px; text-align:center; background:#eee; height:140px; display:flex; align-items:center; justify-content:center;">Sin preview</div>`;
 
     const badges = [];
